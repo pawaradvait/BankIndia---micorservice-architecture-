@@ -12,9 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankIndia.account.constant.AccountConstant;
 import com.bankIndia.account.dto.CustomerDto;
+import com.bankIndia.account.dto.ErrorResponseDto;
 import com.bankIndia.account.dto.ResponseDto;
 import com.bankIndia.account.service.AccountService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Pattern;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,16 +31,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("api")
+@Tag(
+    name = "curd rest api for account in BankIndia",
+    description = "curd rest api for account in BankIndia for create read update and delete the account"
+)
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
+ 
 
-    @GetMapping("/account")
-    public ResponseEntity<String> getAccounts() {
-        return ResponseEntity.ok("Accounts");
-    }
-
+@Operation(summary = "createAccount")
+@ApiResponses({
+    @ApiResponse(
+        responseCode = "201",
+        description = "created successfully"
+    ),
+    
+    @ApiResponse(
+        responseCode = "417",
+        description = "account already exists"
+    )
+}
+)
     @PostMapping("/createAccount")
     public ResponseEntity<ResponseDto> postMethodName(@RequestBody CustomerDto customerDto ) {
     
@@ -48,7 +68,24 @@ public class AccountController {
       
 
     }
-
+   @Operation(
+            summary = "Fetch Account Details REST API",
+            description = "REST API to fetch Customer &  Account details based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @GetMapping("/fetchAccount")
     public ResponseEntity<CustomerDto> getAccount( @RequestParam 
     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
@@ -59,6 +96,28 @@ String mobileNumber) {
 
     }    
 
+    @Operation(
+            summary = "Update Account Details REST API",
+            description = "REST API to update Customer &  Account details based on a account number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @PutMapping("/updateAccount")
     public ResponseEntity<ResponseDto> updateAccount(@RequestBody CustomerDto customerDto) {
          
@@ -71,7 +130,30 @@ String mobileNumber) {
             .body(new ResponseDto(AccountConstant.STATUS_417, AccountConstant.MESSAGE_417_UPDATE));
         }
     }
-      
+     
+    @Operation(
+        summary = "Delete Account & Customer Details REST API",
+        description = "REST API to delete Customer &  Account details based on a mobile number"
+)
+@ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "HTTP Status OK"
+        ),
+        @ApiResponse(
+                responseCode = "417",
+                description = "Expectation Failed"
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "HTTP Status Internal Server Error",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponseDto.class)
+                )
+        )
+}
+)
+
     @DeleteMapping("/deleteAccount")
     public ResponseEntity<ResponseDto> deleteAccount(@RequestParam 
     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")

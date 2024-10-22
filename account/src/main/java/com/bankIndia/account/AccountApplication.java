@@ -2,8 +2,25 @@ package com.bankIndia.account;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
 
 @SpringBootApplication
+@OpenAPIDefinition(
+	info = @Info(
+		title = "Account Service",
+		version = "v1",
+		description = "Account Service API Documentation",
+		contact = @Contact(
+    name = "advait pawar",
+	email = "pawaradvait2003@gmail.com"
+		)
+	)
+)
+@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 public class AccountApplication {
 
 	public static void main(String[] args) {
