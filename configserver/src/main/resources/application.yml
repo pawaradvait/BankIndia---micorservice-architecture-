@@ -3,11 +3,20 @@ server:
 
 spring:
   profiles:
-    active: native
+    active: git
   application:
     name: configserver
   cloud:
     config:
       server:
-        native:
-          search-locations: "classpath:/config"
+        # native:
+        #   search-locations: "classpath:/config"
+        git:
+          uri: https://github.com/pawaradvait/bankIndai-config.git
+          default-label: main
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+
+encrypt:
+  key: 45D81EC1EF61DF9AD8D3E5BB397F9
