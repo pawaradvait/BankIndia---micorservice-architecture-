@@ -1,6 +1,7 @@
 package com.bankIndia.account.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankIndia.account.constant.AccountConstant;
+import com.bankIndia.account.dto.AccountContactInfoDto;
 import com.bankIndia.account.dto.CustomerDto;
 import com.bankIndia.account.dto.ErrorResponseDto;
 import com.bankIndia.account.dto.ResponseDto;
@@ -23,6 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Pattern;
+import lombok.val;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,7 +42,12 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
- 
+  
+    @Autowired
+    private AccountContactInfoDto accountContactInfoDto;
+
+    @Value("${build.version}")        
+    private String version;
 
 @Operation(summary = "createAccount")
 @ApiResponses({
@@ -169,4 +177,20 @@ String mobileNumber) {
             .body(new ResponseDto(AccountConstant.STATUS_417, AccountConstant.MESSAGE_417_DELETE));
         }
     }
+
+
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getVersion(){
+    
+        return ResponseEntity.status(200).body(version);
+   
+}
+
+@GetMapping("/contact-info")
+public ResponseEntity<AccountContactInfoDto> getContactInfo(){
+    
+    return ResponseEntity.status(200).body(accountContactInfoDto);
+   
+}
+
 }
