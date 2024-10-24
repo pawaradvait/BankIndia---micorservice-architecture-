@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bankIndia.constant.LoanConstant;
+import com.bankIndia.dto.LoanDto;
 import com.bankIndia.entity.Loans;
 import com.bankIndia.exception.LoanAlreadyExistExcpetion;
+import com.bankIndia.exception.ResourceNotFoundException;
+import com.bankIndia.mapper.LoanMapper;
 import com.bankIndia.repo.LoanRepo;
 
 @Service
@@ -40,6 +43,42 @@ public class LoanServiceImpl implements LoanService{
 	        newLoan.setOutstandingAmount(LoanConstant.NEW_LOAN_LIMIT);
 	        return newLoan;
 	    }
+	@Override
+	public LoanDto fetchLoan(String mobileNumber) {
+
+		Loans loan  =loanrepo.findByMobileNumber(mobileNumber).orElseThrow(()-> new ResourceNotFoundException("Loan", "Mobile Number", mobileNumber));
+		
+		
+			LoanDto loanDto =LoanMapper.mapToLoansDto(loan, new LoanDto());
+			
+		
+		
+		 
+		
+		return loanDto;
+	}
+	@Override
+	public boolean updateLoan(LoanDto loansDto) {
+		// TODO Auto-generated method stub
+
+		Loans loan  =loanrepo.findByMobileNumber(loansDto.getMobileNumber()).orElseThrow(()-> new ResourceNotFoundException("Loan", "Mobile Number", loansDto.getMobileNumber()));
+		loan = LoanMapper.mapToLoans(loansDto, loan);
+		loanrepo.save(loan);
+		return true;
+
+
+	}
+	@Override
+	public boolean deleteLoan(String mobileNumber) {
+		// TODO Auto-generated method stub
+
+ Loans loan =		loanrepo.findByMobileNumber(mobileNumber).orElseThrow(()-> new ResourceNotFoundException("Loan", "Mobile Number", mobileNumber));
+  
+ loanrepo.deleteById(loan.getLoanId());
+
+		return true;
+ 
+}
 	
 	
 
