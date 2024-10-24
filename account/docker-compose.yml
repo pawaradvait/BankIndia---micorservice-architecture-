@@ -1,0 +1,27 @@
+services:
+  account:
+    image: advaitpawar/bankindia-account:s1
+    container_name: account
+    ports:
+      - 8080:8080
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    networks:
+      - bankindia
+  loan:
+    image: advaitpawar/bankindia-loan:s1
+    container_name: loan
+    ports:
+      - 8090:8090
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    networks:
+      - bankindia
+
+networks:
+  bankindia:
+    driver: bridge
