@@ -1,0 +1,58 @@
+version: "3.8" # Ensure you specify the version
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+    networks:
+      - bankindia
+
+  configserver:
+    image: advaitpawar/bankindia-configserver:s1
+    container_name: configserver
+    ports:
+      - 8071:8071
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - bankindia
+
+  account:
+    image: advaitpawar/bankindia-account:s1
+    container_name: account
+    ports:
+      - 8080:8080
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICACTION_NAME: account
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_RABBITMQ_HOST: rabbitmq
+
+    networks:
+      - bankindia
+
+networks:
+  bankindia:
+    driver: bridge
