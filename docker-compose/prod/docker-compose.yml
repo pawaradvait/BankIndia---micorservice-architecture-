@@ -1,6 +1,21 @@
-version: "3.8" # Ensure you specify the version
-
 services:
+  accountdb:
+    image: mysql
+    container_name: accountdb
+    ports:
+      - 3309:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: accountsdb
+    networks:
+      - bankindia
+
   rabbitmq:
     image: rabbitmq:3.13-management
     hostname: rabbitmq
@@ -37,11 +52,13 @@ services:
       - bankindia
 
   account:
-    image: advaitpawar/bankindia-account:s1
+    image: advaitpawar/bankindia-account:s2
     container_name: account
     ports:
       - 8080:8080
     depends_on:
+      accountdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
     environment:
@@ -49,6 +66,9 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       SPRING_PROFILES_ACTIVE: prod
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://accountdb:3306/accountsdb
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_USERNAME: root
 
     networks:
       - bankindia
