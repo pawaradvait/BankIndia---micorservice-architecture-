@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "EurekaserverApplication",
+      "request": "launch",
+      "mainClass": "com.bankIndia.eurekaserver.EurekaserverApplication",
+      "projectName": ""
+    },
+    {
+      "type": "java",
       "name": "ConfigserverApplication",
       "request": "launch",
       "mainClass": "com.bankIndia.ConfigserverApplication",

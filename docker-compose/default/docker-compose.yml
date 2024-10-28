@@ -33,7 +33,7 @@ services:
       - bankindia
 
   configserver:
-    image: advaitpawar/bankindia-configserver:s1
+    image: advaitpawar/bankindia-configserver:s3
     container_name: configserver
     ports:
       - 8071:8071
@@ -51,9 +51,31 @@ services:
     networks:
       - bankindia
 
+  eurekaserver:
+    image: advaitpawar/bankindia-eurekaserver:s3
+    container_name: eurekaserver
+    ports:
+      - 8761:8761
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: eurekaserver
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+    networks:
+      - bankindia
+
   account:
-    image: advaitpawar/bankindia-account:s2
-    container_name: account
+    image: advaitpawar/bankindia-account:s3
+    container_name: account-ms
     ports:
       - 8080:8080
     depends_on:
@@ -61,14 +83,37 @@ services:
         condition: service_healthy
       configserver:
         condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
     environment:
-      SPRING_APPLICACTION_NAME: account
+      SPRING_APPLICATION_NAME: accounts
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       SPRING_PROFILES_ACTIVE: default
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATASOURCE_URL: jdbc:mysql://accountdb:3306/accountsdb
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_DATASOURCE_USERNAME: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
+
+    networks:
+      - bankindia
+
+  loan:
+    image: advaitpawar/bankindia-loan:s3
+    container_name: loan-ms
+    ports:
+      - 8090:8090
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: loan
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_PROFILES_ACTIVE: default
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
 
     networks:
       - bankindia

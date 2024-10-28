@@ -78,7 +78,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>advaitpawar/bankindia-${project.artifactId}:s1</image>
+						<image>advaitpawar/bankindia-${project.artifactId}:s3</image>
 					</to>
 				</configuration>
 			</plugin>
