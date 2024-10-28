@@ -28,3 +28,32 @@ management:
     web:
       exposure:
         include: "*"
+
+  info:
+    env:
+      enabled: true
+
+  endpoint:
+    shutdown:
+      enabled: true
+
+endpoints:
+  shutdown:
+    enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+
+  server:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+info:
+  app:
+    name: "accounts"
+    description: "Eazy Bank Accounts Application"
+    version: "1.0.0"

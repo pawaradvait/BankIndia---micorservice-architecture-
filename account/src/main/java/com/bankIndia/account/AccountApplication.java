@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 )
 @EnableConfigurationProperties(value ={AccountContactInfoDto.class})
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
+
 public class AccountApplication {
 
 	public static void main(String[] args) {

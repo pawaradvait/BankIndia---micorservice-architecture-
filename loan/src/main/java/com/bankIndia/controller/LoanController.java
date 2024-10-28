@@ -1,5 +1,6 @@
 package com.bankIndia.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties.Application;
 import org.springframework.data.repository.config.RepositoryNameSpaceHandler;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bankIndia.constant.LoanConstant;
 import com.bankIndia.dto.ErrorResponseDto;
 import com.bankIndia.dto.LoanDto;
+import com.bankIndia.dto.LoanProperties;
 import com.bankIndia.dto.ResponseDto;
 import com.bankIndia.service.LoanService;
 
@@ -39,12 +41,15 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping(value="/api/loan" , produces = {MediaType.APPLICATION_JSON_VALUE})
 @Validated
-@AllArgsConstructor
 public class LoanController {
   
-	private final LoanService loanService;
+        @Autowired
+	private  LoanService loanService;
 	
+        @Autowired
+        private LoanProperties loanProperties;
 
+        
 	
 
 	    @Operation(
@@ -167,5 +172,11 @@ public class LoanController {
 		return ResponseEntity.status(HttpStatus.OK).body(loanDto);
 		
 	}
+
+        @GetMapping("/contact-info")
+        public ResponseEntity<LoanProperties> getContactInfo(){
+
+                return ResponseEntity.status(HttpStatus.OK).body(loanProperties);
+        }
 	
 }
