@@ -50,3 +50,7 @@ info:
     name: "loan"
     description: "bankIndia loan Application"
     version: "1.0.0"
+
+logging:
+  level:
+    "[com.bankIndia]": debug

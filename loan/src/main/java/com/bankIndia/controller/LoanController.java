@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Tag(
@@ -41,6 +43,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping(value="/api/loan" , produces = {MediaType.APPLICATION_JSON_VALUE})
 @Validated
+@Slf4j
 public class LoanController {
   
         @Autowired
@@ -166,8 +169,13 @@ public class LoanController {
 )
 
 	@GetMapping("/fetchLoan")
-	public ResponseEntity<LoanDto> fetchLoan(@Valid @RequestParam(value = "mobileNumber") String mobilenumber){
+	public ResponseEntity<LoanDto> fetchLoan(
+         @RequestHeader(value = "BANKINDIA-correlation-id", required = false) String correlationId,      
+        @Valid @RequestParam(value = "mobileNumber") String mobilenumber){
 		
+
+                log.debug("BANKINDIA-correlation-id : {}",correlationId);
+
 		LoanDto loanDto = loanService.fetchLoan(mobilenumber);
 		return ResponseEntity.status(HttpStatus.OK).body(loanDto);
 		

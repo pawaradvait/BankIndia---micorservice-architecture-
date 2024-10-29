@@ -4,5 +4,5 @@ import com.bankIndia.account.dto.CustomerDetailsDto;
 
 public interface CustomerDetailsService {
 
-    CustomerDetailsDto getCustomerDetails(String mobileNumber);
+    CustomerDetailsDto getCustomerDetails(String mobileNumber,String correlationId );
 }
