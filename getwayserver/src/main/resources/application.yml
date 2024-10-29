@@ -9,12 +9,24 @@ spring:
         locator:
           enabled: false
           lowerCaseServiceId: true
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+
     gateway:
       enabled: true
   info:

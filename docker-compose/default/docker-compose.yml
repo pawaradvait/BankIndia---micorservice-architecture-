@@ -31,9 +31,8 @@ services:
 
     networks:
       - bankindia
-
   configserver:
-    image: advaitpawar/bankindia-configserver:s3
+    image: advaitpawar/bankindia-configserver:s4
     container_name: configserver
     ports:
       - 8071:8071
@@ -52,7 +51,7 @@ services:
       - bankindia
 
   eurekaserver:
-    image: advaitpawar/bankindia-eurekaserver:s3
+    image: advaitpawar/bankindia-eurekaserver:s4
     container_name: eurekaserver
     ports:
       - 8761:8761
@@ -74,10 +73,16 @@ services:
       - bankindia
 
   account:
-    image: advaitpawar/bankindia-account:s3
+    image: advaitpawar/bankindia-account:s4
     container_name: account-ms
     ports:
       - 8080:8080
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       accountdb:
         condition: service_healthy
@@ -99,10 +104,16 @@ services:
       - bankindia
 
   loan:
-    image: advaitpawar/bankindia-loan:s3
+    image: advaitpawar/bankindia-loan:s4
     container_name: loan-ms
     ports:
       - 8090:8090
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -113,6 +124,25 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       SPRING_PROFILES_ACTIVE: default
 
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
+
+    networks:
+      - bankindia
+  gatewayserver:
+    image: advaitpawar/bankindia-getwayserver:s4
+    container_name: gatewayserver
+    ports:
+      - 8072:8072
+
+    depends_on:
+      account:
+        condition: service_healthy
+      loan:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: gatewayserver
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
 
     networks:
