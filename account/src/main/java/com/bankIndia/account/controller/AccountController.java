@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.bankIndia.account.constant.AccountConstant;
 import com.bankIndia.account.dto.AccountContactInfoDto;
@@ -18,6 +19,7 @@ import com.bankIndia.account.dto.ErrorResponseDto;
 import com.bankIndia.account.dto.ResponseDto;
 import com.bankIndia.account.service.AccountService;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Pattern;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestBody;
     name = "curd rest api for account in BankIndia",
     description = "curd rest api for account in BankIndia for create read update and delete the account"
 )
+@Slf4j
 public class AccountController {
 
     @Autowired
@@ -186,11 +190,19 @@ String mobileNumber) {
    
 }
 
+@Retry(name = "getContactInfo" , fallbackMethod = "getContactInfoFallback")
 @GetMapping("/contact-info")
 public ResponseEntity<AccountContactInfoDto> getContactInfo(){
-    
-    return ResponseEntity.status(200).body(accountContactInfoDto);
+        log.debug("invoking account service");
+        log.debug("invoking account service");
+
+   return ResponseEntity.status(200).body(accountContactInfoDto);
    
 }
 
+public ResponseEntity<String> getContactInfoFallback(Exception t){
+
+    return ResponseEntity.status(200).body("contact email : bankindia.contact@gmail.com");      
+
+}
 }

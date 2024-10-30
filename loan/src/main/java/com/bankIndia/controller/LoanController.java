@@ -175,6 +175,7 @@ public class LoanController {
 		
 
                 log.debug("BANKINDIA-correlation-id : {}",correlationId);
+                log.debug("invoking loan service");
 
 		LoanDto loanDto = loanService.fetchLoan(mobilenumber);
 		return ResponseEntity.status(HttpStatus.OK).body(loanDto);
@@ -183,6 +184,7 @@ public class LoanController {
 
         @GetMapping("/contact-info")
         public ResponseEntity<LoanProperties> getContactInfo(){
+                log.debug("invoking loan service");
 
                 return ResponseEntity.status(HttpStatus.OK).body(loanProperties);
         }

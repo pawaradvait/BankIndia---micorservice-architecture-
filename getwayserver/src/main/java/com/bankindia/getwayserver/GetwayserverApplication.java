@@ -1,5 +1,6 @@
 package com.bankindia.getwayserver;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.springframework.boot.SpringApplication;
@@ -23,12 +24,17 @@ public class GetwayserverApplication {
  .route(p -> p.path("/bankindia/account/**")
  .filters(f->f.rewritePath("/bankindia/account/(?<segment>.*)", "/${segment}")
  .addResponseHeader("X-RESPONSE-TIME", LocalDateTime.now().toString())
-  .circuitBreaker(config->config.setName("accountcircuitbreaker").setFallbackUri("forward:/contactsupport"))
+   .circuitBreaker(config->config.setName("accountcircuitbreaker").setFallbackUri("forward:/contactsupport"))
  
  )
  .uri("lb://ACCOUNTS"))
+ 
+ 
  .route(p -> p.path("/bankindia/loan/**")
- .filters(f->f.rewritePath("/bankindia/loan/(?<segment>.*)", "/${segment}").addResponseHeader("X-RESPONSE-TIME", LocalDateTime.now().toString()))
+ .filters(f->f.rewritePath("/bankindia/loan/(?<segment>.*)", "/${segment}")
+ .addResponseHeader("X-RESPONSE-TIME", LocalDateTime.now().toString())
+ .retry(retryconfig -> retryconfig.setRetries(3).setBackoff(Duration.ofMillis(100),Duration.ofMillis(10000), 2, true))
+ )
  .uri("lb://LOAN")).build();
 	}
 
