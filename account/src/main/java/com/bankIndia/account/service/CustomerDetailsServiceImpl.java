@@ -40,10 +40,13 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService{
    Customers customers =  customerRepo.findByMobileNumber(mobileNumber).orElseThrow(()-> new ResourceNotFoundException("Customer","mobileNumber",mobileNumber));
    Account account = accountRepo.findByCustomerId(customers.getCustomerId());
    ResponseEntity<LoanDto> loanresponse =  loanFeignClient.fetchLoan(correlationId,mobileNumber);
-     LoanDto loanDto = loanresponse.getBody();
-     CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customers, new CustomerDetailsDto());
-  customerDetailsDto.setAccountsDto(AccountMapper.mapToAccountsDto(account, new AccountDto()));
+   CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customers, new CustomerDetailsDto());
+
+   if(loanresponse !=null){ 
+   LoanDto loanDto = loanresponse.getBody();
  customerDetailsDto.setLoanDto(loanDto);
+   }
+   customerDetailsDto.setAccountsDto(AccountMapper.mapToAccountsDto(account, new AccountDto()));
 
   return customerDetailsDto;
       

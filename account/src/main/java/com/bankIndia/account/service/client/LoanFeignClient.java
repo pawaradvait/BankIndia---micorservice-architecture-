@@ -11,7 +11,7 @@ import com.bankIndia.account.dto.LoanDto;
 
 import jakarta.validation.Valid;
 
-@FeignClient("loan")
+@FeignClient(value = "loan" , fallback = Fallback.class)
 public interface LoanFeignClient {
 
     

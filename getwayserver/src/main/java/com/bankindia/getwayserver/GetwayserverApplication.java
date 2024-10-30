@@ -23,7 +23,7 @@ public class GetwayserverApplication {
  .route(p -> p.path("/bankindia/account/**")
  .filters(f->f.rewritePath("/bankindia/account/(?<segment>.*)", "/${segment}")
  .addResponseHeader("X-RESPONSE-TIME", LocalDateTime.now().toString())
- .circuitBreaker(config->config.setName("accountcircuitbreaker").setFallbackUri("forward:/contactsupport"))
+  .circuitBreaker(config->config.setName("accountcircuitbreaker").setFallbackUri("forward:/contactsupport"))
  
  )
  .uri("lb://ACCOUNTS"))
