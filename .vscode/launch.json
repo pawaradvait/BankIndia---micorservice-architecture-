@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "GetwayserverApplication",
+      "request": "launch",
+      "mainClass": "com.bankindia.getwayserver.GetwayserverApplication",
+      "projectName": "getwayserver"
+    },
+    {
+      "type": "java",
       "name": "EurekaserverApplication",
       "request": "launch",
       "mainClass": "com.bankIndia.eurekaserver.EurekaserverApplication",
