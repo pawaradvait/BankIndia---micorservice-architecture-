@@ -19,6 +19,7 @@ import com.bankIndia.account.dto.ErrorResponseDto;
 import com.bankIndia.account.dto.ResponseDto;
 import com.bankIndia.account.service.AccountService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -183,6 +184,7 @@ String mobileNumber) {
     }
 
 
+  @RateLimiter(name = "getVersion" , fallbackMethod = "getVersionFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getVersion(){
     
@@ -190,6 +192,13 @@ String mobileNumber) {
    
 }
 
+public ResponseEntity<String> getVersionFallback(Exception t){
+
+    return ResponseEntity.status(200).body("build version : 1.0.0");
+}
+
+/*************  ✨ Codeium Command ⭐  *************/
+/******  9d02bc8d-d6be-403b-b9f5-fad3f4aa6797  *******/
 @Retry(name = "getContactInfo" , fallbackMethod = "getContactInfoFallback")
 @GetMapping("/contact-info")
 public ResponseEntity<AccountContactInfoDto> getContactInfo(){
