@@ -90,11 +90,10 @@ resilience4j.retry:
         - org.springframework.web.client.ResourceAccessException
         - java.net.SocketTimeoutException
         - java.net.ConnectException
-
-resilience4j:
-  ratelimiter:
-    configs:
-      default:
-        timeout-duration: 1000
-        limit-refresh-period: 5000
-        limit-for-period: 1
+# resilience4j:
+#   ratelimiter:
+#     configs:
+#       default:
+#         timeout-duration: 1000
+#         limit-refresh-period: 5000
+#         limit-for-period: 1

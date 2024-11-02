@@ -184,7 +184,7 @@ String mobileNumber) {
     }
 
 
-  @RateLimiter(name = "getVersion" , fallbackMethod = "getVersionFallback")
+//   @RateLimiter(name = "getVersion" , fallbackMethod = "getVersionFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getVersion(){
     
@@ -192,10 +192,10 @@ String mobileNumber) {
    
 }
 
-public ResponseEntity<String> getVersionFallback(Exception t){
+// public ResponseEntity<String> getVersionFallback(Exception t){
 
-    return ResponseEntity.status(200).body("build version : 1.0.0");
-}
+//     return ResponseEntity.status(200).body("build version : 1.0.0");
+// }
 
 /*************  ✨ Codeium Command ⭐  *************/
 /******  9d02bc8d-d6be-403b-b9f5-fad3f4aa6797  *******/

@@ -53,10 +53,10 @@
 			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
 		</dependency>
  
-<dependency>
+<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,7 +95,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>advaitpawar/bankindia-${project.artifactId}:s4</image>
+						<image>advaitpawar/bankindia-${project.artifactId}:s5</image>
 					</to>
 				</configuration>
 			</plugin>

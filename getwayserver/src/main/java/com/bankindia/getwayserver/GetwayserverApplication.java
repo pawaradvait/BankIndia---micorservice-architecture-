@@ -43,7 +43,7 @@ public class GetwayserverApplication {
  .filters(f->f.rewritePath("/bankindia/loan/(?<segment>.*)", "/${segment}")
  .addResponseHeader("X-RESPONSE-TIME", LocalDateTime.now().toString())
  .retry(retryconfig -> retryconfig.setRetries(3).setBackoff(Duration.ofMillis(100),Duration.ofMillis(10000), 2, true))
- .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()).setKeyResolver(userKeyResolver()))
+//  .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()).setKeyResolver(userKeyResolver()))
  
  )
 
@@ -59,15 +59,15 @@ public class GetwayserverApplication {
 	}
 
 
-	@Bean
-	public RedisRateLimiter redisRateLimiter() {
-		return new RedisRateLimiter(1, 1, 1);
-	}
+	// @Bean
+	// public RedisRateLimiter redisRateLimiter() {
+	// 	return new RedisRateLimiter(1, 1, 1);
+	// }
 
-	@Bean
-	KeyResolver userKeyResolver() {
-		return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("user"))
-				.defaultIfEmpty("anonymous");
-	}
+	// @Bean
+	// KeyResolver userKeyResolver() {
+	// 	return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("user"))
+	// 			.defaultIfEmpty("anonymous");
+	// }
 
 }
