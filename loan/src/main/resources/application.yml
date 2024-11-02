@@ -65,3 +65,5 @@ info:
 logging:
   level:
     "[com.bankIndia]": debug
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
