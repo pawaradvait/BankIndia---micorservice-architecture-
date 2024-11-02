@@ -41,6 +41,9 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
     shutdown:
       enabled: true
@@ -97,3 +100,4 @@ resilience4j.retry:
 #         timeout-duration: 1000
 #         limit-refresh-period: 5000
 #         limit-for-period: 1
+
