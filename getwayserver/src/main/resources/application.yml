@@ -12,6 +12,13 @@ spring:
       httpclient:
         connect-timeout: 1000
         response-timeout: 2s
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
+    # during start up the resource server will download certificate from above [path ] which
+    #wiil be use for validating token send in req by client
   data:
     redis:
       connect-timeout: 2s
